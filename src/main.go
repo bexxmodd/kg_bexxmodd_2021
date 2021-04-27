@@ -2,19 +2,30 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 )
 
 func main() {
-
-	numbers := []int{230, 711, 13, 37}
-	phoneticNumbers(numbers)
-
+	args := os.Args[1:] // discard program name
+	var err error
+	numbers := make([]int, len(args))
+	for i := 0; i < len(args); i++ {
+		if numbers[i], err = strconv.Atoi(args[i]); err != nil {
+			fmt.Println("Error: Program only accepts integers")
+			panic(err)
+		}
+	}
+	printPhonetic(numbers)
 }
 
-func phoneticNumbers(nums []int) {
+// printPhonetic: Takes array of integers and prints phonetic equivalent
+//  of each integer into the stdout seperated with commas.
+// Example:
+//		- {25, 0, 313} will be printed as -> "TwoFive,Zero,ThreeOneThree"
+func printPhonetic(nums []int) {
 	for i := 0; i < len(nums); i++ {
-		s := strconv.Itoa(nums[i]) // Convert decimal into a str
+		s := strconv.Itoa(nums[i]) // convert decimal into a str
 		for j := 0; j < len(s); j++ {
 
 			switch digit := string(s[j]); digit {
@@ -40,7 +51,8 @@ func phoneticNumbers(nums []int) {
 				fmt.Printf("Nine")
 			}
 		}
-		if i < len(nums)-1 { // print commas except last word
+		// print commas; except after the last word
+		if i < len(nums)-1 {
 			fmt.Printf(",")
 		}
 	}
